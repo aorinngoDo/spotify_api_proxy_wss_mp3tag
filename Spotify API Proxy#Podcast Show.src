@@ -1,0 +1,123 @@
+Debug "on" ""g:\Git\spotify_api_proxy_wss_mp3tag\debug.log""
+
+#####   Search by dialog   #####
+
+[Name]=Spotify API Proxy
+[BasedOn]=http://localhost:10080/
+[IndexUrl]=http://localhost:10080/v1/search?type=show&market=JP&limit=50&offset=0&include_external=audio&q=%s
+[WordSeparator]=%20
+[IndexFormat]=%_url%|%_preview%|%Album%|%Artist%|%Tracks%|%Description%
+[Encoding]=url-utf-8
+[SearchBy]=%album%
+
+
+#####   List of search results   #####
+
+[ParserScriptIndex]=...
+
+json "on"
+json_select_object "shows"
+
+json_foreach "items"
+    # Show info json URL
+    json_select "href"
+    Replace "https://api.spotify.com" "http://localhost:10080"
+    SayRest
+    Say "?market=JP"
+    Say "|"
+
+    # Preview URL
+    json_select_object "external_urls"
+    json_select "spotify"
+    SayRest
+    Say "|"
+    json_unselect_object
+
+    # Show Title
+    json_select "name"
+    SayRest
+    Say "|"
+
+    # Publisher (Artist)
+    json_select "publisher"
+    SayRest
+    Say "|"
+
+    # Total Episodes
+    json_select "total_episodes"
+    SayRest
+    Say "|"
+
+    # Description
+    json_select "description"
+    SayRest
+
+    # End of line
+    SayNewline
+
+json_foreach_end
+
+
+#####   Show info   #####
+[ParserScriptAlbum]=...
+
+json "on"
+
+### Common info ###
+
+# Show Title (Album)
+OutputTo "ALBUM"
+json_select "name"
+SayRest
+
+# Publisher (Artist)
+OutputTo "ARTIST"
+json_select "publisher"
+SayRest
+OutputTo "ALBUMARTIST"
+json_select "publisher"
+SayRest
+
+# Show CoverArt URL
+OutputTo "COVERURL"
+json_select_array "images" 1
+json_select "url"
+SayRest
+json_unselect_object
+
+### Episode Info Loop ###
+json_select_object "episodes"
+
+
+json_foreach "items"
+
+    # Episode Release Date
+    OutputTo "YEAR"
+    json_select "release_date"
+    SayRest
+    Say "|"
+
+    # Episode Title
+    OutputTo "TRACKS"
+    json_select "name"
+    SayRest
+    Say "|"
+
+    # Episode Description
+    OutputTo "COMMENT"
+    json_select "description"
+    SayRest
+    Say "|"
+
+    OutputTo "PODCASTDESC"
+    json_select "description"
+    SayRest
+    Say "|"
+
+    # Episode Duration
+    OutputTo "_LENGTH"
+    json_select "duration_ms"
+    SayRest
+    Say "|"
+
+json_foreach_end

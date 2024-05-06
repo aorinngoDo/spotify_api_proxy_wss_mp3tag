@@ -1,0 +1,93 @@
+#####   Search by dialog   #####
+
+[Name]=Spotify API Proxy
+[BasedOn]=http://localhost:10080/
+[IndexUrl]=http://localhost:10080/v1/search?type=episode&market=JP&limit=50&offset=0&include_external=audio&q=%s
+[WordSeparator]=%20
+[IndexFormat]=%_url%|%_preview%|%Album%|%Year%
+[Encoding]=url-utf-8
+[SearchBy]=%title% %_filename%
+
+
+#####   List of search results   #####
+
+[ParserScriptIndex]=...
+
+json "on"
+json_select_object "episodes"
+
+json_foreach "items"
+    # Episode info json URL
+    json_select "href"
+    Replace "https://api.spotify.com" "http://localhost:10080"
+    SayRest
+    Say "?market=JP"
+    Say "|"
+
+    # Preview URL
+    json_select_object "external_urls"
+    json_select "spotify"
+    SayRest
+    Say "|"
+    json_unselect_object
+
+    # Episode Title
+    json_select "name"
+    SayRest
+    Say "|"
+
+    # Release Date
+    json_select "release_date"
+    SayRest
+
+    # End of line
+    SayNewline
+
+json_foreach_end
+
+
+#####   Episode info   #####
+[ParserScriptAlbum]=...
+
+json "on"
+
+# Episode Title
+OutputTo "TITLE"
+json_select "name"
+SayRest
+
+# Episode Description
+OutputTo "COMMENT"
+json_select "description"
+SayRest
+OutputTo "PODCASTDESC"
+json_select "description"
+SayRest
+
+# Episode Release Date
+OutputTo "YEAR"
+json_select "release_date"
+SayRest
+
+# Episode CoverArt URL
+OutputTo "COVERURL"
+json_select_array "images" 1
+json_select "url"
+SayRest
+json_unselect_object
+
+# Podcast Common Info
+json_select_object "show"
+
+# Podcast Title (Album Title)
+OutputTo "ALBUM"
+json_select "name"
+SayRest
+
+# Podcast Publisher (Artist)
+OutputTo "ARTIST"
+json_select "publisher"
+SayRest
+OutputTo "ALBUMARTIST"
+json_select "publisher"
+SayRest
