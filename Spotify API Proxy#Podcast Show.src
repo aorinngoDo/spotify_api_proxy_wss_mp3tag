@@ -35,11 +35,13 @@ json_foreach "items"
 
     # Show Title
     json_select "name"
+    Replace "|" "$verticalBar()"
     SayRest
     Say "|"
 
     # Publisher (Artist)
     json_select "publisher"
+    Replace "|" "$verticalBar()"
     SayRest
     Say "|"
 
@@ -50,6 +52,7 @@ json_foreach "items"
 
     # Description
     json_select "description"
+    Replace "|" "$verticalBar()"
     SayRest
 
     # End of line
@@ -68,14 +71,17 @@ json "on"
 # Show Title (Album)
 OutputTo "ALBUM"
 json_select "name"
+Replace "|" "$verticalBar()"
 SayRest
 
 # Publisher (Artist)
 OutputTo "ARTIST"
 json_select "publisher"
+Replace "|" "$verticalBar()"
 SayRest
 OutputTo "ALBUMARTIST"
 json_select "publisher"
+Replace "|" "$verticalBar()"
 SayRest
 
 # Show CoverArt URL
@@ -100,24 +106,27 @@ json_foreach "items"
     # Episode Title
     OutputTo "TRACKS"
     json_select "name"
+    Replace "|" "$verticalBar()"
     SayRest
     Say "|"
 
     # Episode Description
     OutputTo "COMMENT"
     json_select "description"
+    Replace "|" "$verticalBar()"
     SayRest
     Say "|"
 
     OutputTo "PODCASTDESC"
     json_select "description"
+    Replace "|" "$verticalBar()"
     SayRest
     Say "|"
 
     # Episode Duration
     OutputTo "_LENGTH"
     json_select "duration_ms"
-    SayRest
+    SayDuration "ms"
     Say "|"
 
 json_foreach_end
