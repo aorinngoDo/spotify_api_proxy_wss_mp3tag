@@ -1,0 +1,132 @@
+#####   Search by dialog   #####
+
+[Name]=Spotify API Proxy
+[BasedOn]=http://localhost:10080/
+[IndexUrl]=http://localhost:10080/v1/search?market=JP&type=album&limit=50&offset=0&q=%s
+[WordSeparator]=%20
+[IndexFormat]=%_url%|%_preview%|%Album%|%Artist%|%Year%|%Tracks%
+[Encoding]=url-utf-8
+[SearchBy]=%album% %artist%
+
+
+#####   List of search results   #####
+
+[ParserScriptIndex]=...
+
+json "on"
+json_select_object "albums"
+
+json_foreach "items"
+    # Album info json URL
+    json_select "href"
+    Replace "https://api.spotify.com" "http://localhost:10080"
+    SayRest
+    Say "|"
+
+    # Preview URL
+    json_select_object "external_urls"
+    json_select "spotify"
+    SayRest
+    Say "|"
+    json_unselect_object
+
+    # Album Title
+    json_select "name"
+    Replace "|" "$verticalBar()"
+    SayRest
+    Say "|"
+
+    # Album Artist
+    json_select_many "artists" "name" "; "
+    Replace "|" "$verticalBar()"
+    SayRest
+    Say "|"
+
+    # Album Release Date
+    json_select "release_date"
+    SayRest
+    Say "|"
+
+    # Album Tracks
+    json_select "total_tracks"
+    SayRest
+
+    # End of line
+    SayNewline
+
+json_foreach_end
+
+
+#####   Album info   #####
+[ParserScriptAlbum]=...
+
+json "on"
+
+### Common info ###
+
+# Album Title
+OutputTo "ALBUM"
+json_select "name"
+Replace "|" "$verticalBar()"
+SayRest
+
+# Album Artist
+OutputTo "ALBUMARTIST"
+json_select_many "artists" "name" "; "
+SayRest
+
+# Show CoverArt URL
+OutputTo "COVERURL"
+json_select_array "images" 1
+json_select "url"
+SayRest
+json_unselect_object
+
+# Album Release Date
+OutputTo "YEAR"
+json_select "release_date"
+SayRest
+
+# Album Total Tracks
+OutputTo "TOTALTRACKS"
+json_select "total_tracks"
+SayRest
+
+# Album Label
+OutputTo "LABEL"
+json_select "label"
+SayRest
+
+
+### Track Info Loop ###
+json_select_object "tracks"
+
+json_foreach "items"
+
+    # Track Title
+    OutputTo "TRACKS"
+    json_select "name"
+    Replace "|" "$verticalBar()"
+    SayRest
+    Say "|"
+
+    # Track Artist
+    OutputTo "ARTIST"
+    json_select_many "artists" "name" "; "
+    Replace "|" "$verticalBar()"
+    SayRest
+    Say "|"
+
+    # Disc Number
+    OutputTo "DISCNUMBER"
+    json_select "disc_number"
+    SayRest
+    Say "|"
+
+    # Track Duration
+    OutputTo "_LENGTH"
+    json_select "duration_ms"
+    SayDuration "ms"
+    Say "|"
+
+json_foreach_end
