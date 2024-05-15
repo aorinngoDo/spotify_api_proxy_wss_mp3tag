@@ -2,7 +2,7 @@
 
 Spotify APIは利用にヘッダ認証が必要であるため、Mp3TagのWeb Source Script単体では利用できない。
 
-簡素なプロキシをローカルサーバーに立てることで、Spotify APIの情報を利用できるようにしている。
+簡素なプロキシをローカルサーバに立てることで、Spotify APIの情報を利用できるようにしている。
 
 Spotify API requests require header authentication, so it is not possible to use it with Mp3Tag's Web Source Script alone.
 
@@ -17,7 +17,7 @@ By setting up a simple proxy on a local server, you can use Spotify API informat
 
 2. [spotify_api_proxy_config_example.py](spotify_api_proxy_config_example.py) を `spotify_api_proxy_config_example.py` にリネームして、`CLIENT_ID`, `CLIENT_SECRET` を自分で発行したものに変更する (参照: [Getting started with Web API | Spotify for Developers](https://developer.spotify.com/documentation/web-api/tutorials/getting-started))
 
-3. `python spotify_api_proxy.py` でプロキシサーバーを立ち上げる
+3. `python spotify_api_proxy.py` でプロキシサーバを立ち上げる
    - 1時間でトークンが切れるので、必要に応じて再起動する
    - ファイアウォールで許可の設定が必要な場合がある
 
@@ -41,4 +41,4 @@ By setting up a simple proxy on a local server, you can use Spotify API informat
 ## Notes
 
 - **For users outside Japan, it is recommended to change `market=JP` in the `.src` file to the appropriate country code.**
-- **The proxy server is buggy and not secure. Use at your own risk.  プロキシササーバは不安定で、セキュリティが保証されていません。自己責任で使用してください。**
+- **The proxy server is buggy and not secure. Use at your own risk.  プロキシサーバは不安定で、セキュリティが保証されていません。自己責任で使用してください。**
