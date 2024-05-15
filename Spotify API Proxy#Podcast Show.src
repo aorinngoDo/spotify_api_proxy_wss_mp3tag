@@ -1,10 +1,8 @@
-Debug "on" ""g:\Git\spotify_api_proxy_wss_mp3tag\debug.log""
-
 #####   Search by dialog   #####
 
 [Name]=Spotify API Proxy
 [BasedOn]=http://localhost:10080/
-[IndexUrl]=http://localhost:10080/v1/search?type=show&market=JP&limit=50&offset=0&include_external=audio&q=%s
+[IndexUrl]=http://localhost:10080/v1/search?type=show&limit=50&offset=0&include_external=audio&q=%s
 [WordSeparator]=%20
 [IndexFormat]=%_url%|%_preview%|%Album%|%Artist%|%Tracks%|%Description%
 [Encoding]=url-utf-8
@@ -23,7 +21,6 @@ json_foreach "items"
     json_select "href"
     Replace "https://api.spotify.com" "http://localhost:10080"
     SayRest
-    Say "?market=JP"
     Say "|"
 
     # Preview URL

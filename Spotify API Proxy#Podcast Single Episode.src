@@ -2,7 +2,7 @@
 
 [Name]=Spotify API Proxy
 [BasedOn]=http://localhost:10080/
-[IndexUrl]=http://localhost:10080/v1/search?type=episode&market=JP&limit=50&offset=0&include_external=audio&q=%s
+[IndexUrl]=http://localhost:10080/v1/search?type=episode&limit=50&offset=0&include_external=audio&q=%s
 [WordSeparator]=%20
 [IndexFormat]=%_url%|%_preview%|%Album%|%Year%
 [Encoding]=url-utf-8
@@ -21,7 +21,6 @@ json_foreach "items"
     json_select "href"
     Replace "https://api.spotify.com" "http://localhost:10080"
     SayRest
-    Say "?market=JP"
     Say "|"
 
     # Preview URL
